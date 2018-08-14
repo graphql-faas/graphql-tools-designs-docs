@@ -8,6 +8,7 @@ for modifying the current spec. Decorators don't enable anything that wasn't pos
 but they make some common patterns much more reusable.
 
 Decorators can be used for a variety of purposes:
+
 * Adding metadata to the schema
 * Authorization
 * Argument validation
@@ -19,6 +20,7 @@ Decorators can be used for a variety of purposes:
 GraphQL schema decorators use the `+` sign to distinguish them from directives, which use the `@` sign and come **after** the thing they're modifying. They could both share the `@sign`, but then decorators would have to come after the thing they decorate, which looks a bit awkward.
 
 Here is an example of decorators on a schema specified with GraphQL schema language:
+
 ```
 +connector(storage: "mongoDB")
 +id(fields: ["uuid"])
@@ -67,6 +69,7 @@ schema {
 In GraphQL schema language, arguments to decorators follow the same spec as arguments to fields.
 
 ## What decorators do:
+
 Decorators can be selectively applied to:
 * The schema
 * A specific type (object type, union, interface, input, scalar)
@@ -75,10 +78,11 @@ Decorators can be selectively applied to:
 
 Decorators can modify the behavior of the parts of the schema they are applied to. Sometimes that requires modifying other parts of the schema. For instance, the @validateRange decorator modifies the behavior of the containing field's resolve function.
 
-In general, decorators either add, remove or modify an attribute of the thing they wrap. The most common type of decorator (e.g. @adminOnly, @log, @connector) will wrap one or more field's resolve functions to alter the execution behavior of the GraphQL schema, but other decorators (e.g. @description) may add attributes to a type, field or argument. It is also possible for a type decorator to add a field to the type (e.g. @id(fields: ["uuid"]) can add the __id field).
+In general, decorators either add, remove or modify an attribute of the thing they wrap. The most common type of decorator (e.g. `@adminOnly`, `@log`, `@connector`) will wrap one or more field's resolve functions to alter the execution behavior of the GraphQL schema, but other decorators (e.g. `@description`) may add attributes to a type, field or argument. It is also possible for a type decorator to add a field to the type (e.g.` @id(fields: ["uuid"]`) can add the __id field).
 
 
 ## Schema decorator API
+
 All decorators must extend the SchemaDecorator class and implement the following interfaces:
 
 ```es6

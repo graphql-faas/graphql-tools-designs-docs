@@ -12,6 +12,7 @@ This is a draft at the moment, and not the final document. Chances are that the 
 Technically you could write a GraphQL server without connectors and models by writing all your logic directly into the resolve functions, but in most cases that's not ideal. Connectors and models are a way of organizing code in a GraphQL server, and you should use them to keep your server modular. If the need arises, you can always write optimized queries directly in your resolvers or models.
 
 Let's use an example schema, because it's always easier to explain things with examples:
+
 ```
 type Author {
   id: ID!
@@ -63,6 +64,7 @@ Models are the glue between connectors - which are backend-specific - and GraphQ
 Let's say for example that you have two types, Author and Post, which are both stored in MySQL. Rather than calling the MySQL connector directly from your resolve functions, you should create models for Author and Post, which use the MySQL connector. This additional level of abstraction helps separate the data fetching logic from the GraphQL schema, which makes reusing and refactoring it easier.
 
 In the example schema above, the Authors model would have the following methods:
+
 ```
 const Author = {
   getById(id); // get an Author by id.
@@ -70,6 +72,7 @@ const Author = {
 ```
 
 The Posts model would have the following methods:
+
 ```
 const Posts = {
   getById(id); // get Post by id
@@ -83,9 +86,11 @@ In some cases it may be a good idea for your `getById` (and other) methods to ta
 
 
 ## How to use connectors and models in Apollo Server
+
 note: This is a still a draft design document. At the time of writing there are no connectors. As we build connectors, we'll add them to the docs.
 
 Let's presume a simple mongo connector:
+
 ```javascript
 // ./connectors/mongodb.js
 class MongoDBConnector {
@@ -102,11 +107,13 @@ class MongoDBConnector {
 }
 
 export default MongoDBConnector
+
 ```
 
 Connectors and models are easy to use in apollo server:
 
 Step 1: Import the connector and the DB driver
+
 ```
 import MongoDBConnector from './connectors/mongodb';
 import pmongo from 'promised-mongo';
@@ -114,12 +121,14 @@ import knex from 'knex';
 ```
 
 Step 2: Establish a connection with the DB
+
 ```
 const mongoDB = pmongo('username:password@localhost:27017/blog');
 const sqlDB = knex({ dialect: 'sqlite3', connection: { filename: './blog.sqlite' } });
 ```
 
 Step 3: Create the model
+
 ```
 class Author {
   constructor(connectorKeys){
@@ -134,6 +143,7 @@ class Author {
 ```
 
 Step 4: Adding models to the context
+
 ```
 app.use('/graphql', apolloServer({
   schema: Schema,
@@ -151,6 +161,7 @@ app.use('/graphql', apolloServer({
 ```
 
 Step 4: Calling models in resolve functions
+
 ```
 function resolve(author, args, ctx){
   return ctx.models.Author.getById(author.id, ctx);

@@ -1,0 +1,14 @@
+{
+  "name": "graphql-tools-designs-docs",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/graphql-faas/graphql-tools-designs-docs.git",
+  "author": "dalongrong <1141591465@qq.com>",
+  "license": "MIT",
+  "devDependencies": {
+    "spec-md": "^0.6.0"
+  },
+  "scripts": {
+    "build":"spec-md docs/README.md > docs/index.html"
+  }
+}

@@ -1,0 +1,1055 @@
+<!DOCTYPE html>
+<!-- Built with spec-md -->
+<html><head><meta charset="utf-8"><title>graphql-tools designs docs</title><style>body {
+  color: #333333;
+  font: 13pt/18pt Cambria, "Palatino Linotype", Palatino, "Liberation Serif", serif;
+  margin: 6rem auto 3rem;
+  max-width: 780px;
+}
+
+
+/* Links */
+
+a {
+  color: #3B5998;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+
+/* Section headers */
+
+h1, h2, h3, h4, h5, h6, h7, h8 {
+  margin: 3rem 0 1em;
+  position: relative;
+}
+
+h1 {
+  font-size: 1.5em;
+  margin: 8rem 0 2em;
+}
+
+h2 {
+  font-size: 1.45em;
+  margin: 8rem 0 1em;
+}
+
+h3 {
+  font-size: 1.30em;
+  margin: 5rem 0 1em;
+}
+
+h4 {
+  font-size: 1.20em;
+}
+
+h5 {
+  font-size: 1.12em;
+}
+
+h6, h7, h8 {
+  font-size: 1.1em;
+}
+
+section .spec-secid {
+  margin-right: 1ex;
+  position: absolute;
+  right: 100%;
+  text-align: right;
+  white-space: nowrap;
+}
+
+footer {
+  font-size: 75%;
+  opacity: 0.5;
+  text-align: center;
+  margin-top: 12rem;
+}
+
+
+/* Table of contents */
+
+.spec-toc {
+  margin: 1rem 0 3rem;
+}
+
+.spec-toc .title {
+  content: 'Contents';
+  display: block;
+  font-weight: bold;
+  margin: 3rem 0 1rem;
+}
+
+.spec-toc .spec-secid {
+  margin-right: 1ex;
+}
+
+.spec-toc ol {
+  list-style: none;
+  padding-left: 0;
+}
+
+.spec-toc ol ol {
+  list-style: none;
+  padding-left: 2ex;
+}
+
+.spec-toc li {
+  position: relative;
+  padding: 5px 0 0 30px;
+  margin: -5px 0 0 -30px;
+}
+
+.spec-toc a {
+  color: #333333;
+}
+
+.spec-toc a:hover {
+  text-decoration: none;
+}
+
+.spec-toc a .spec-secid {
+  color: #3B5998;
+}
+
+.spec-toc a:hover .spec-secid {
+  text-decoration: underline;
+}
+
+.spec-toc .toggle {
+  display: none;
+}
+
+.spec-toc .toggle + label {
+  cursor: pointer;
+  left: 10px;
+  opacity: 1;
+  padding: 3px 5px 3px 6px;
+  position: absolute;
+  top: 8px;
+  transform: rotate(0deg);
+  transition: all 0.18s ease-in-out;
+}
+
+.spec-toc .toggle + label:after {
+  border-color: transparent transparent transparent #bbc;
+  border-style: solid;
+  border-width: 6px 0 6px 7px;
+  content: ' ';
+  display: block;
+  height: 0;
+  width: 0;
+}
+
+.spec-toc .toggle:checked + label {
+  transform: rotate(90deg);
+}
+
+.spec-toc li:not(:hover) > .toggle:checked + label {
+  opacity: 0;
+}
+
+.spec-toc .toggle:not(:checked) ~ ol {
+  max-height: 0;
+  overflow: hidden;
+}
+
+
+/* Sidebar */
+
+.spec-sidebar-toggle {
+  display: none;
+}
+
+.spec-sidebar-toggle + label {
+  position: fixed;
+  right: 0;
+  top: 0;
+  padding: 10px 15px;
+  font-size: 30px;
+  color: rgba(0,0,0,0.7);
+  z-index: 2;
+  cursor: pointer;
+  user-select: none;
+  -moz-user-select: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+}
+
+.spec-sidebar {
+  display: none;
+  position: fixed;
+  right: 0;
+  top: 0;
+  width: 320px;
+  font-size: 80%;
+  overflow-y: scroll;
+  height: 100%;
+  padding: 0 0 5rem 30px;
+  box-sizing: border-box;
+  background: #f0f0f0;
+}
+
+.spec-sidebar-toggle:checked ~ .spec-sidebar {
+  display: block;
+  box-shadow:
+    -1px 0 rgba(0,0,0,0.12),
+    -4px 0 8px -2px rgba(0,0,0,0.05);
+}
+
+.spec-sidebar .viewing > a:after {
+  color: #8b9;
+  content: '\2022';
+  margin-left: 1ex;
+}
+
+@media (min-width: 1240px) {
+  .spec-sidebar-toggle + label {
+    display: none;
+  }
+
+  .spec-sidebar {
+    display: block;
+    box-shadow:
+      inset 1px 0 rgba(0,0,0,0.05),
+      inset 4px 0 8px -2px rgba(0,0,0,0.08) !important;
+  }
+
+  body {
+    padding-right: 300px;
+  }
+}
+
+
+/* Notes */
+
+.spec-note {
+  background: #FEFEF3;
+  border-left: solid 4px #F4E925;
+  margin: 1em -1em;
+  min-width: 416px;
+  padding: 1ex 1em 1ex calc(1em - 4px);
+  width: -moz-fit-content;
+  width: -webkit-fit-content;
+  width: fit-content;
+}
+
+.spec-note::before {
+  color: #6C6613;
+  content: 'Note';
+  display: block;
+  font: italic 11pt/18pt Cambria, "Palatino Linotype", Palatino, "Liberation Serif", serif;
+  opacity: 0.6;
+  user-select: none;
+}
+
+
+/* Todos */
+
+.spec-todo {
+  color: #666666;
+  margin: 1em 0 1em 5em;
+  min-height: 1em;
+}
+
+.spec-todo::before {
+  content: 'todo';
+  display: block;
+  float: left;
+  margin-left: -5em;
+  text-transform: uppercase;
+}
+
+/* Index table */
+
+.spec-index ol {
+  list-style-type: none;
+  margin: 0 0 0 2rem;
+  padding: 0;
+  column-width: 210px;
+  column-gap: 2rem;
+}
+
+.spec-index ol li {
+  width: min-content;
+}
+
+/* Code */
+
+code {
+  background: #FAFAFA;
+  font-family: Consolas, Monaco, monospace;
+  font-size: 85%;
+  font-weight: inherit;
+  margin: -2px -1px;
+  padding: 3px 3px;
+  white-space: pre;
+}
+
+pre code {
+  background: none;
+  font-weight: inherit;
+  margin: 0;
+  padding: 0;
+}
+
+pre {
+  background: #FAFAFA;
+  border-left: solid 4px #E9E9E9;
+  margin: 1em -1em;
+  min-width: 40ch;
+  padding: 1ex 1em 1ex calc(1em - 4px);
+  width: -moz-fit-content;
+  width: -webkit-fit-content;
+  width: fit-content;
+}
+
+.spec-example {
+  background: #FAFAFF;
+  border-left: solid 4px #BBBBFF;
+}
+
+.spec-counter-example {
+  background: #FFFAFA;
+  border-left: solid 4px #FFBBBB;
+}
+
+.spec-example > a,
+.spec-counter-example > a {
+  display: block;
+  font: italic 11pt/18pt Cambria, "Palatino Linotype", Palatino, "Liberation Serif", serif;
+  opacity: 0.6;
+  user-select: none;
+}
+
+.spec-counter-example > a {
+  color: #98593b;
+}
+
+
+/* Tables */
+
+table {
+  border-collapse: collapse;
+}
+
+th {
+  background-color: #F9F9F9;
+}
+
+td, th {
+  border: 1px solid #D0D0D0;
+  padding: 0.4em;
+  vertical-align: baseline;
+}
+
+
+/* Edits */
+
+ins {
+  background-color: rgba(0, 200, 30, 0.08);
+  text-decoration: none;
+}
+
+del {
+  background-color: rgba(200, 0, 0, 0.08);
+}
+
+.spec-added, .spec-removed {
+  border-left: 4px solid;
+  margin-left: -18px;
+  padding-left: 14px;
+}
+
+.spec-added {
+  border-color: #396;
+}
+
+.spec-removed {
+  border-color: #933;
+  text-decoration: line-through;
+}
+
+
+/* Values */
+
+.spec-keyword {
+  font-weight: bold;
+}
+
+.spec-string {
+  font-family: Consolas, Monaco, monospace;
+  white-space: pre;
+}
+
+var {
+  font-style: italic;
+}
+
+*[data-name] {
+  transition: 0.15s background ease-out;
+  border-radius: 2px;
+  padding: 0 3px;
+  margin: 0 -3px;
+}
+
+
+/* Grammar semantics, algorithms and calls */
+
+.spec-semantic,
+.spec-algo {
+  margin: 1rem 0 1rem 2rem;
+}
+
+.spec-semantic > .spec-rhs {
+  display: inline-block;
+  margin-left: 1ex;
+}
+
+.spec-semantic > .spec-nt::after,
+.spec-algo > .spec-call:first-child::after {
+  content: ':';
+  font-style: normal;
+  font-weight: bold;
+  margin-left: 1ex;
+}
+
+.spec-semantic ol, .spec-semantic ol ol ol ol,
+.spec-algo ol, .spec-algo ol ol ol ol {
+  list-style-type: decimal;
+}
+
+.spec-semantic ol ol, .spec-semantic ol ol ol ol ol,
+.spec-algo ol ol, .spec-algo ol ol ol ol ol {
+  list-style-type: lower-alpha;
+}
+
+.spec-semantic ol ol ol, .spec-semantic ol ol ol ol ol ol,
+.spec-algo ol ol ol, .spec-algo ol ol ol ol ol ol {
+  list-style-type: lower-roman;
+}
+
+.spec-call > a {
+  color: inherit;
+}
+
+
+/* Grammar productions */
+
+.spec-production {
+  margin: 1rem 0 1rem 2rem;
+}
+
+.spec-production > .spec-nt::after {
+  content: ':';
+  font-style: normal;
+  font-weight: bold;
+  margin: 0 1ex;
+}
+
+.spec-semantic.d2 > .spec-nt::after,
+.spec-production.d2 > .spec-nt::after {
+  content: '::';
+}
+
+.spec-semantic.d3 > .spec-nt::after,
+.spec-production.d3 > .spec-nt::after {
+  content: ':::';
+}
+
+.spec-rhs {
+  margin-left: 2rem;
+}
+
+.spec-oneof {
+  display: inline;
+}
+
+.spec-oneof::before {
+  content: 'one of';
+  font-style: normal;
+  font-weight: bold;
+}
+
+.spec-oneof > table {
+  margin-left: 2rem;
+}
+
+.spec-oneof .spec-rhs {
+  border: none;
+  margin: 0;
+  padding: 0 0.5em;
+  vertical-align: baseline;
+}
+
+.spec-rhs .spec-constrained:not(:first-child),
+.spec-rhs .spec-quantified:not(:first-child),
+.spec-rhs .spec-nt:not(:first-child),
+.spec-rhs .spec-t:not(:first-child),
+.spec-rhs .spec-rx:not(:first-child),
+.spec-rhs .spec-prose:not(:first-child),
+.spec-rhs .spec-empty:not(:first-child),
+.spec-rhs .spec-lookahead:not(:first-child) {
+  margin-left: 1ex;
+}
+
+.spec-condition {
+  font-size: 85%;
+}
+
+.spec-condition::before {
+  content: '[+'
+}
+
+.spec-condition.not::before {
+  content: '[~'
+}
+
+.spec-condition::after {
+  content: ']'
+}
+
+.spec-empty,
+.spec-prose {
+  color: #666666;
+}
+
+.spec-nt {
+  font-style: italic;
+}
+
+.spec-nt > a {
+  color: inherit;
+}
+
+.spec-quantifiers,
+.spec-params {
+  font-size: 65%;
+  font-style: normal;
+  vertical-align: sub;
+}
+
+.spec-quantifier.list {
+  color: #3348D3;
+}
+
+.spec-quantifier.optional {
+  color: #83238E;
+}
+
+.spec-params,
+.spec-condition {
+  color: #1C7758;
+}
+
+.spec-params::before {
+  content: '[';
+}
+
+.spec-params::after {
+  content: ']';
+}
+
+.spec-quantifier:not(:last-child)::after,
+.spec-param:not(:last-child)::after {
+  color: #666666;
+  content: ', ';
+}
+
+.spec-param.conditional::before {
+  content: '?';
+}
+
+.spec-t, .spec-rx {
+  color: #333333;
+  font-family: monospace;
+  font-weight: bold;
+}
+
+.spec-butnot::before {
+  color: #666666;
+  content: 'but not';
+  font-family: Cambria, "Palatino Linotype", Palatino, "Liberation Serif", serif;
+  font-weight: normal;
+  margin-right: 1ex;
+}
+
+.spec-butnot > *:not(:first-child)::before {
+  color: #666666;
+  content: 'or';
+  font-family: Cambria, "Palatino Linotype", Palatino, "Liberation Serif", serif;
+  font-weight: normal;
+  margin-right: 1ex;
+}
+
+.spec-rhs .spec-oneof::before,
+.spec-rhs .spec-butnot::before {
+  margin-left: 1ex;
+}
+
+.spec-lookahead > * {
+  margin: 0 !important;
+}
+
+.spec-lookahead > *:not(:first-child)::before {
+  color: #666666;
+  content: ', ';
+  font-family: Cambria, "Palatino Linotype", Palatino, "Liberation Serif", serif;
+  font-style: normal;
+  font-weight: normal;
+}
+
+.spec-lookahead::before {
+  color: #666666;
+  content: '[lookahead = ';
+  font-family: Cambria, "Palatino Linotype", Palatino, "Liberation Serif", serif;
+  font-style: normal;
+  font-weight: normal;
+}
+
+.spec-lookahead.not::before {
+  content: '[lookahead \2260  ';
+}
+
+.spec-lookahead.set::before {
+  content: '[lookahead \2208  {';
+  margin-right: 0;
+}
+
+.spec-lookahead.set.not::before {
+  content: '[lookahead \2209  {';
+}
+
+.spec-lookahead::after {
+  color: #666666;
+  content: ']';
+}
+
+.spec-lookahead.set::after {
+  content: '}]';
+}
+</style><style>/* Copied from node_modules/prismjs/themes/prism.css */
+/**
+ * prism.js default theme for JavaScript, CSS and HTML
+ * Based on dabblet (http://dabblet.com)
+ * @author Lea Verou
+ */
+
+code[class*="language-"],
+pre[class*="language-"] {
+	color: black;
+	background: none;
+	text-shadow: 0 1px white;
+	font-family: Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace;
+	text-align: left;
+	white-space: pre;
+	word-spacing: normal;
+	word-break: normal;
+	word-wrap: normal;
+	line-height: 1.5;
+
+	-moz-tab-size: 4;
+	-o-tab-size: 4;
+	tab-size: 4;
+
+	-webkit-hyphens: none;
+	-moz-hyphens: none;
+	-ms-hyphens: none;
+	hyphens: none;
+}
+
+pre[class*="language-"]::-moz-selection, pre[class*="language-"] ::-moz-selection,
+code[class*="language-"]::-moz-selection, code[class*="language-"] ::-moz-selection {
+	text-shadow: none;
+	background: #b3d4fc;
+}
+
+pre[class*="language-"]::selection, pre[class*="language-"] ::selection,
+code[class*="language-"]::selection, code[class*="language-"] ::selection {
+	text-shadow: none;
+	background: #b3d4fc;
+}
+
+@media print {
+	code[class*="language-"],
+	pre[class*="language-"] {
+		text-shadow: none;
+	}
+}
+
+/* Code blocks */
+pre[class*="language-"] {
+	padding: 1em;
+	margin: .5em 0;
+	overflow: auto;
+}
+
+:not(pre) > code[class*="language-"],
+pre[class*="language-"] {
+	background: #f5f2f0;
+}
+
+/* Inline code */
+:not(pre) > code[class*="language-"] {
+	padding: .1em;
+	border-radius: .3em;
+	white-space: normal;
+}
+
+.token.comment,
+.token.prolog,
+.token.doctype,
+.token.cdata {
+	color: slategray;
+}
+
+.token.punctuation {
+	color: #999;
+}
+
+.namespace {
+	opacity: .7;
+}
+
+.token.property,
+.token.tag,
+.token.boolean,
+.token.number,
+.token.constant,
+.token.symbol,
+.token.deleted {
+	color: #905;
+}
+
+.token.selector,
+.token.attr-name,
+.token.string,
+.token.char,
+.token.builtin,
+.token.inserted {
+	color: #690;
+}
+
+.token.operator,
+.token.entity,
+.token.url,
+.language-css .token.string,
+.style .token.string {
+	color: #a67f59;
+	background: hsla(0, 0%, 100%, .5);
+}
+
+.token.atrule,
+.token.attr-value,
+.token.keyword {
+	color: #07a;
+}
+
+.token.function {
+	color: #DD4A68;
+}
+
+.token.regex,
+.token.important,
+.token.variable {
+	color: #e90;
+}
+
+.token.important,
+.token.bold {
+	font-weight: bold;
+}
+.token.italic {
+	font-style: italic;
+}
+
+.token.entity {
+	cursor: help;
+}
+</style><script>(function (){
+var styleSheet = document.getElementsByTagName('style')[0].sheet;
+var ruleIndex;
+
+function removeHighlight() {
+  if (ruleIndex) {
+    styleSheet.deleteRule(ruleIndex);
+    ruleIndex = void 0;
+  }
+}
+
+function highlightKeyword(name) {
+  removeHighlight();
+  ruleIndex = styleSheet.insertRule(
+    '*[data-name="' + name + '"] { background: #FBF8D0; }',
+    styleSheet.cssRules.length
+  );
+}
+
+document.documentElement.addEventListener('mouseover', function (event) {
+  var nameAttribute = event.target.attributes['data-name'];
+  if (nameAttribute) {
+    highlightKeyword(nameAttribute.value);
+  }
+});
+
+document.documentElement.addEventListener('mouseout', removeHighlight);
+})()</script></head><body><header><h1>graphql-tools designs docs</h1><nav class="spec-toc"><div class="title">Contents</div><ol><li><a href="#sec-graphql-tools-designs-docs"><span class="spec-secid">1</span>graphql-tools designs docs</a><input hidden class="toggle" type="checkbox" checked id="_toggle_1" /><label for="_toggle_1"></label><ol><li><a href="#sec-contents"><span class="spec-secid">1.1</span>contents</a><input hidden class="toggle" type="checkbox" checked id="_toggle_1.1" /><label for="_toggle_1.1"></label><ol><li><a href="#sec-Connectors-and-models"><span class="spec-secid">1.1.1</span>Connectors and models</a><input hidden class="toggle" type="checkbox" checked id="_toggle_1.1.1" /><label for="_toggle_1.1.1"></label><ol><li><a href="#sec-What-is-a-connector-"><span class="spec-secid">1.1.1.1</span>What is a connector?</a></li><li><a href="#sec-What-is-a-model-"><span class="spec-secid">1.1.1.2</span>What is a model?</a></li><li><a href="#sec-How-to-use-connectors-and-models-in-Apollo-Server"><span class="spec-secid">1.1.1.3</span>How to use connectors and models in Apollo Server</a></li><li><a href="#sec-FAQ"><span class="spec-secid">1.1.1.4</span>FAQ</a></li></ol></li><li><a href="#sec-Draft-specification-for-GraphQL-Schema-Decorators"><span class="spec-secid">1.1.2</span>Draft specification for GraphQL Schema Decorators</a><input hidden class="toggle" type="checkbox" checked id="_toggle_1.1.2" /><label for="_toggle_1.1.2"></label><ol><li><a href="#sec-What-decorators-do-"><span class="spec-secid">1.1.2.1</span>What decorators do:</a></li><li><a href="#sec-Schema-decorator-API"><span class="spec-secid">1.1.2.2</span>Schema decorator API</a></li><li><a href="#sec-Applying-decorators-to-a-GraphQL-JS-schema"><span class="spec-secid">1.1.2.3</span>Applying decorators to a GraphQL-JS schema</a></li></ol></li></ol></li></ol></li></ol></nav></header><section id="sec-graphql-tools-designs-docs" secid="1"><h2><span class="spec-secid" title="link to this section"><a href="#sec-graphql-tools-designs-docs">1</a></span>graphql-tools designs docs</h2><section id="sec-contents" secid="1.1"><h3><span class="spec-secid" title="link to this section"><a href="#sec-contents">1.1</a></span>contents</h3><section id="sec-Connectors-and-models" secid="1.1.1"><h4><span class="spec-secid" title="link to this section"><a href="#sec-Connectors-and-models">1.1.1</a></span>Connectors and models</h4><ul><li><strong>Connector:</strong> a layer on top of a database/backend driver that has GraphQL&#8208;specific error handling, logging, batching, and/or caching. Only needs to be implemented once for each backend, can be reused in many apps</li><li><strong>Model:</strong> a set of functions to fetch data of a certain GraphQL type by using various connectors. Models are usually application&#8208;specific.</li></ul><p>This document is intended as a design document for people who want to write connectors for various backends. Its main purpose is to specify what properties connectors should have so they can be easily shared with other people and used in Apollo without any shims.</p><p>This is a draft at the moment, and not the final document. Chances are that the spec will change as we learn about the better ways to build GraphQL servers. It should be pretty close to the final version though, so if you want to get started and build connectors for specific backends, this document is a good starting point.</p><p>Technically you could write a GraphQL server without connectors and models by writing all your logic directly into the resolve functions, but in most cases that&rsquo;s not ideal. Connectors and models are a way of organizing code in a GraphQL server, and you should use them to keep your server modular. If the need arises, you can always write optimized queries directly in your resolvers or models.</p><p>Let&rsquo;s use an example schema, because it&rsquo;s always easier to explain things with examples:</p><pre><code>type Author {
+  id: ID!
+  name: String
+  posts: [Post]
+}
+
+type Post {
+  id: ID!
+  title: String
+  text: String
+  views: Int
+  author: Author
+}
+
+type Query {
+  author(id: ID!): Author
+  searchPosts(titleContains: String): [Post]
+}
+</code></pre><p>In this example, an author has multiple posts, and each post has one author.</p><p>Here&rsquo;s an illustration for how connectors and models would look like for this example if Authors and Posts were stored in MySQL, but view counts in MongoDB:</p><p><img src="connector-model-diagram.png" alt="Connectors are database-specific, models are application-specific"/></p><p>The Posts model connects to both SQL and MongoDB. Title, text and authorId come from SQL, the view count comes from MongoDB.</p><section id="sec-What-is-a-connector-" secid="1.1.1.1"><h5><span class="spec-secid" title="link to this section"><a href="#sec-What-is-a-connector-">1.1.1.1</a></span>What is a connector?</h5><p>A connector is the piece of code that links a GraphQL server to a specific backend (eg. MySQL, MongoDB, S3, neo4j). Each backend will have its own connector. Apart from connecting the GraphQL server to a backend, connectors should also:</p><ul><li>Batch requests together whenever it makes sense</li><li>Cache data fetched for the backend to avoid extra requests (at least for the duration of one query)</li><li>Provide a way to log information about data fetched, such as how long the request took, which things were batched together, what was fetched from the cache, how much data was fetched etc.</li></ul><p>Both batching and caching are more important in GraphQL than in traditional endpoints, because one GraphQL query may make many separate calls to the backend to retrieve all the items where a REST endpoint would only retrieve a few items, usually in one query. The separate calls let GraphQL support a wide range of queries, whereas a single REST endpoint typically only allows querying for a narrow set of objects.</p></section><section id="sec-What-is-a-model-" secid="1.1.1.2"><h5><span class="spec-secid" title="link to this section"><a href="#sec-What-is-a-model-">1.1.1.2</a></span>What is a model?</h5><p>Models are the glue between connectors &ndash; which are backend&#8208;specific &ndash; and GraphQL types &ndash; which are app&#8208;specific. They are very similar to models in ORMs, such as Rails&rsquo; Active Record.</p><p>Let&rsquo;s say for example that you have two types, Author and Post, which are both stored in MySQL. Rather than calling the MySQL connector directly from your resolve functions, you should create models for Author and Post, which use the MySQL connector. This additional level of abstraction helps separate the data fetching logic from the GraphQL schema, which makes reusing and refactoring it easier.</p><p>In the example schema above, the Authors model would have the following methods:</p><pre><code>const Author = {
+  getById(id); // get an Author by id.
+}
+</code></pre><p>The Posts model would have the following methods:</p><pre><code>const Posts = {
+  getById(id); // get Post by id
+  getByTitleContains(contains); //get a list of posts that have a word in the title
+  getByAuthor(authorId); // get list of posts by a certain author
+  views(postId); // get the number of views for post with ID postId (fetches from MongoDB)
+}
+</code></pre><p>In some cases it may be a good idea for your <code>getById</code> (and other) methods to take the list of fields to be fetched as an additional argument. That way the model layer can make sure to fetch only the data required from the backend. This is especially important for types that have large fields which are not always required.</p></section><section id="sec-How-to-use-connectors-and-models-in-Apollo-Server" secid="1.1.1.3"><h5><span class="spec-secid" title="link to this section"><a href="#sec-How-to-use-connectors-and-models-in-Apollo-Server">1.1.1.3</a></span>How to use connectors and models in Apollo Server</h5><div class="spec-note">This is a still a draft design document. At the time of writing there are no connectors. As we build connectors, we&rsquo;ll add them to the docs.</div><p>Let&rsquo;s presume a simple mongo connector:</p><pre><code><span class="token comment" spellcheck="true">// ./connectors/mongodb.js</span>
+<span class="token keyword">class</span> <span class="token class-name">MongoDBConnector</span> <span class="token punctuation">{</span>
+  <span class="token function">constructor</span><span class="token punctuation">(</span>connection<span class="token punctuation">)</span><span class="token punctuation">{</span>
+    <span class="token keyword">this</span><span class="token punctuation">.</span>connection <span class="token operator">=</span> connection<span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+  <span class="token function">closeConnection</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
+    <span class="token keyword">this</span><span class="token punctuation">.</span>connection<span class="token punctuation">.</span><span class="token function">close</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+  <span class="token function">collection</span><span class="token punctuation">(</span>collectionName<span class="token punctuation">)</span><span class="token punctuation">{</span>
+    <span class="token comment" spellcheck="true">// caching, batching and logging could be added here</span>
+    <span class="token keyword">return</span> connection<span class="token punctuation">.</span><span class="token function">collection</span><span class="token punctuation">(</span>connectionName<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+
+<span class="token keyword">export</span> <span class="token keyword">default</span> MongoDBConnector
+
+</code></pre><p>Connectors and models are easy to use in apollo server:</p><p>Step 1: Import the connector and the DB driver</p><pre><code>import MongoDBConnector from &#x27;./connectors/mongodb&#x27;;
+import pmongo from &#x27;promised-mongo&#x27;;
+import knex from &#x27;knex&#x27;;
+</code></pre><p>Step 2: Establish a connection with the DB</p><pre><code>const mongoDB = pmongo(&#x27;username:password@localhost:27017/blog&#x27;);
+const sqlDB = knex({ dialect: &#x27;sqlite3&#x27;, connection: { filename: &#x27;./blog.sqlite&#x27; } });
+</code></pre><p>Step 3: Create the model</p><pre><code>class Author {
+  constructor(connectorKeys){
+    this.connectorKeys = connectorKeys;
+  }
+  getById(id, context){
+    return context.connectors[this.connectorKeys.db]
+      .collection(&#x27;author&#x27;)
+      .findOne({ _id: id });
+  }
+}
+</code></pre><p>Step 4: Adding models to the context</p><pre><code>app.use(&#x27;/graphql&#x27;, apolloServer({
+  schema: Schema,
+  context: {
+    connectors: {
+      mongo: new MongoDBConnector(mongoDB),
+      sql: new SqlConnector(sqlDB)
+    },
+    models: {
+      Author: new Author({ db: &#x27;mongo&#x27; }),
+      Post: new Post({ postDb: &#x27;sql&#x27;, viewsDb: &#x27;mongo&#x27; }),
+    }
+  }
+});
+</code></pre><p>Step 4: Calling models in resolve functions</p><pre><code>function resolve(author, args, ctx){
+  return ctx.models.Author.getById(author.id, ctx);
+}
+</code></pre></section><section id="sec-FAQ" secid="1.1.1.4"><h5><span class="spec-secid" title="link to this section"><a href="#sec-FAQ">1.1.1.4</a></span>FAQ</h5><p><strong>Question:</strong> Are models the same as GraphQL types? <strong>Answer:</strong> There will usually be a 1:1 correspondence between types in your schema and the models, so it makes sense to keep them in the same file, or at least in the same folder. The subtle difference is that while the GraphQL schema describes the types and their relationships, the models define which connectors should be used to fetch the actual data for that type.</p><p><strong>Question:</strong> Can I use &lt;Mongoose/Sequelize/MyOtherFavoriteORM&gt; with Apollo Server? <strong>Answer:</strong> Yes, you can use an existing ORM if you wish. In that case, the models you use will be your ORM&rsquo;s models, and the connector part will be in the ORM itself. Most ORMs don&rsquo;t implement batching and caching, but in the future there should be connectors that work with various ORMs so developers don&rsquo;t need to worry about batching and caching, and can keep using the ORM of their choice. In the meantime you can always start without batching and caching, and then add it manually where necessary (just as you might write an optimized raw query when using your ORM now). </p></section></section><section id="sec-Draft-specification-for-GraphQL-Schema-Decorators" secid="1.1.2"><h4><span class="spec-secid" title="link to this section"><a href="#sec-Draft-specification-for-GraphQL-Schema-Decorators">1.1.2</a></span>Draft specification for GraphQL Schema Decorators</h4><p>Decorators can be used to modify a GraphQL schema behavior, somewhat similar to directives which modify the way a GraphQL server executes a query.</p><p>The intent of schema decorators is to make GraphQL schemas more malleable without the need for modifying the current spec. Decorators don&rsquo;t enable anything that wasn&rsquo;t possible before, but they make some common patterns much more reusable.</p><p>Decorators can be used for a variety of purposes:</p><ul><li>Adding metadata to the schema</li><li>Authorization</li><li>Argument validation</li><li>Filtering of results</li><li>Logging &amp; profiling</li><li>Error handling</li><li>Backend connectors</li></ul><p>GraphQL schema decorators use the <code>+</code> sign to distinguish them from directives, which use the <code>@</code> sign and come <strong>after</strong> the thing they&rsquo;re modifying. They could both share the <code>@sign</code>, but then decorators would have to come after the thing they decorate, which looks a bit awkward.</p><p>Here is an example of decorators on a schema specified with GraphQL schema language:</p><pre><code>+connector(storage: &quot;mongoDB&quot;)
++id(fields: [&quot;uuid&quot;])
+type Person {
+  uuid: String!
+  name: String!
+
+  +deprecated(reason: &quot;Use the &#x27;name&#x27; field instead&quot;)
+  longName: String
+  friends: [Person]
+}
+
+type RootQuery {
+  +description(text: &quot;find a person by name&quot;)
+  findPerson(name: String!)
+
+  +adminOnly
+  +log(type: &quot;adminAccess&quot;)
+  allPersons(
+    page: Int = 0
+
+    +validateRange(min: 1, max: 10)
+    numPages: Int = 1
+  ): [Person]
+}
+
+type RootMutation {
+  +requiresAuthentication
+  +log(type: &quot;userAccess&quot;)
+  addPerson(
+    +maxLen(100)
+    name: String!
+  ): Int
+
+  +adminOnly
+  +log(type: &quot;adminAccess&quot;)
+  removePerson(id: Int!): Boolean
+}
+
+schema {
+  query: RootQuery
+  mutation: RootMutation
+}
+</code></pre><p>In GraphQL schema language, arguments to decorators follow the same spec as arguments to fields.</p><section id="sec-What-decorators-do-" secid="1.1.2.1"><h5><span class="spec-secid" title="link to this section"><a href="#sec-What-decorators-do-">1.1.2.1</a></span>What decorators do:</h5><p>Decorators can be selectively applied to:</p><ul><li>The schema</li><li>A specific type (object type, union, interface, input, scalar)</li><li>A specific field</li><li>An argument</li></ul><p>Decorators can modify the behavior of the parts of the schema they are applied to. Sometimes that requires modifying other parts of the schema. For instance, the @validateRange decorator modifies the behavior of the containing field&rsquo;s resolve function.</p><p>In general, decorators either add, remove or modify an attribute of the thing they wrap. The most common type of decorator (e.g. <code>@adminOnly</code>, <code>@log</code>, <code>@connector</code>) will wrap one or more field&rsquo;s resolve functions to alter the execution behavior of the GraphQL schema, but other decorators (e.g. <code>@description</code>) may add attributes to a type, field or argument. It is also possible for a type decorator to add a field to the type (e.g.<code> @id(fields: [&quot;uuid&quot;]</code>) can add the __id field).</p></section><section id="sec-Schema-decorator-API" secid="1.1.2.2"><h5><span class="spec-secid" title="link to this section"><a href="#sec-Schema-decorator-API">1.1.2.2</a></span>Schema decorator API</h5><p>All decorators must extend the SchemaDecorator class and implement the following interfaces:</p><pre><code>class SampleFieldDecorator extends SchemaDecorator {
+  const tag = &#x27;sample&#x27;; // matches +sample in GraphQL schema language
+  const locations = [&#x27;field&#x27;, &#x27;type&#x27;, &#x27;interface&#x27;, &#x27;union&#x27;]; // where this decorator can be applied
+
+  // the argSignature can be used to check whether a decorator&#x27;s arguments are valid.
+  const argSignature = {
+    type: GraphQLString,
+    min: GraphQLInt,
+    max: GraphQLInt
+  };
+
+  // the constructor is used to configure things once per server, such as database credentials.
+  // if the same decorator class is to be used with different configurations, then two instances
+  // with different prefixes have to be created.
+  constructor(config, prefix = &#x27;&#x27;){
+    this.config = config;
+    this.prefix = prefix;
+  }
+
+  getTag(){
+    return this.prefix + tag;
+  }
+
+  isWellPlaced(locationName){
+    return locations.indexOf(locationName) &gt;= 0;
+  }
+
+  getArgSignature(){
+    return argSignature;
+  }
+
+  // apply returns a function which gets applied to the decorated thing.
+  apply(){
+
+    // context says what scope this decorator is being applied to, i.e. &#x27;type&#x27;, &#x27;schema&#x27;, &#x27;field&#x27; etc.
+    return (wrappedThing, { schema, type, field, context }) =&gt; {
+      // use this.config ...
+      // use args
+      // modify wrappedThing&#x27;s properties, resolve functions, etc.
+    }
+  }
+}
+</code></pre><p>When constructing a GraphQL schema from GraphQL schema language with decorators, all decorators need to be specified and given to the schema generation function, otherwise an error will be thrown:</p><pre><code>import { Description, Deprecated, Validator } from &#x27;graphql-decorators&#x27;;
+const shorthandSchema = gql` ... schema here `;
+
+const availableDecorators = [ new Description(), new Deprecated(), new Validator()];
+
+// fictional example, not the actual function signature:
+const schema = makeExecutableSchema({
+  schema: shorthandSchema,
+  decorators: availableDecorators
+});
+</code></pre></section><section id="sec-Applying-decorators-to-a-GraphQL-JS-schema" secid="1.1.2.3"><h5><span class="spec-secid" title="link to this section"><a href="#sec-Applying-decorators-to-a-GraphQL-JS-schema">1.1.2.3</a></span>Applying decorators to a GraphQL-JS schema</h5><p>The use of schema decorators is most immediately obvious in GraphQL schema language, but they can also be applied to a GraphQL&#8208;JS schema. You might want to do this to get portable components that can be used across many schemas. Here is an example:</p><pre><code>import { Description, DeprecationReason, Validator } from &#x27;graphql-decorators&#x27;;
+// ... more imports ...
+const deprecationReason = new DeprecationReason();
+const description = new Description();
+const validator = new Validator();
+
+const schema = new GraphQLSchema({
+  query: new GraphQLObjectType({
+    name: &#x27;RootQuery&#x27;,
+    decorators: [ description.apply({ text: &#x27;This is the root query&#x27; }) ],
+    fields: () =&gt; {
+      getString: {
+        type: GraphQLString,
+        decorators: [ deprecationReason.apply({ text: &#x27;This field never did anything useful&#x27; })],
+        resolve(root, {str}){ return str; },
+        args: {
+          str: {
+            type: GraphQLString,
+            decorators: [ validator.apply({ type: &#x27;length&#x27;, min: 1, max: 1000 }) ]
+          },
+        },
+      },
+    },
+  }),
+});
+</code></pre><p>To apply these decorators, the function <code>applySchemaDecorators(schema)</code> has to be called like so:</p><pre><code>import { applySchemaDecorators } from &#x27;graphql-tools&#x27;;
+
+const schema = new GraphQLSchema({
+  // schema definition here
+});
+
+applySchemaDecorators(schema); // applies the decorators to the schema in place.
+</code></pre><p>Many decorators can be used on the server as well as the client, which means they have to be part of the information returned by the introspection query. However, only the tag and the arguments should be shared with the client, not the configuration. The client will most likely need different configuration.</p><p>Some decorators may need to be server&#8208;only, in which case they should not be introspectable by the client.</p><p>Decorators can be used to add metadata to a GraphQL schema in a way that is portable across different servers and clients. As long as the semantics of a decorator are well&#8208;specified, there could be GraphQL&#8208;JS, Graphene, Apollo&#8208;client, Relay, Sangria, etc. implementations for the same decorator, which given the same decorator tag and arguments will do the same thing on all these different implementations. For example, they could be used to provide optimistic UI in apollo&#8208;client and relay with zero additional code: The server version of the decorator modifies a mutation so it updates a specific store, the client version (eg. apollo&#8208;client) updates the client cache instead. </p></section></section></section></section><footer>Written in <a href="http://leebyron.com/spec-md/" target="_blank">Spec Markdown</a>.</footer><input hidden class="spec-sidebar-toggle" type="checkbox" id="spec-sidebar-toggle" aria-hidden /><label for="spec-sidebar-toggle" aria-hidden>&#x2630;</label><div class="spec-sidebar" aria-hidden><div class="spec-toc"><div class="title"><a href="#">graphql-tools designs docs</a></div><ol><li id="_sidebar_1"><a href="#sec-graphql-tools-designs-docs"><span class="spec-secid">1</span>graphql-tools designs docs</a><input hidden class="toggle" type="checkbox" id="_sidebar_toggle_1" /><label for="_sidebar_toggle_1"></label><ol><li id="_sidebar_1.1"><a href="#sec-contents"><span class="spec-secid">1.1</span>contents</a><input hidden class="toggle" type="checkbox" id="_sidebar_toggle_1.1" /><label for="_sidebar_toggle_1.1"></label><ol><li id="_sidebar_1.1.1"><a href="#sec-Connectors-and-models"><span class="spec-secid">1.1.1</span>Connectors and models</a><input hidden class="toggle" type="checkbox" id="_sidebar_toggle_1.1.1" /><label for="_sidebar_toggle_1.1.1"></label><ol><li id="_sidebar_1.1.1.1"><a href="#sec-What-is-a-connector-"><span class="spec-secid">1.1.1.1</span>What is a connector?</a></li><li id="_sidebar_1.1.1.2"><a href="#sec-What-is-a-model-"><span class="spec-secid">1.1.1.2</span>What is a model?</a></li><li id="_sidebar_1.1.1.3"><a href="#sec-How-to-use-connectors-and-models-in-Apollo-Server"><span class="spec-secid">1.1.1.3</span>How to use connectors and models in Apollo Server</a></li><li id="_sidebar_1.1.1.4"><a href="#sec-FAQ"><span class="spec-secid">1.1.1.4</span>FAQ</a></li></ol></li><li id="_sidebar_1.1.2"><a href="#sec-Draft-specification-for-GraphQL-Schema-Decorators"><span class="spec-secid">1.1.2</span>Draft specification for GraphQL Schema Decorators</a><input hidden class="toggle" type="checkbox" id="_sidebar_toggle_1.1.2" /><label for="_sidebar_toggle_1.1.2"></label><ol><li id="_sidebar_1.1.2.1"><a href="#sec-What-decorators-do-"><span class="spec-secid">1.1.2.1</span>What decorators do:</a></li><li id="_sidebar_1.1.2.2"><a href="#sec-Schema-decorator-API"><span class="spec-secid">1.1.2.2</span>Schema decorator API</a></li><li id="_sidebar_1.1.2.3"><a href="#sec-Applying-decorators-to-a-GraphQL-JS-schema"><span class="spec-secid">1.1.2.3</span>Applying decorators to a GraphQL-JS schema</a></li></ol></li></ol></li></ol></li></ol></div><script>(function (){
+var currentSection;
+var numberedSections = [];
+
+var sections = document.getElementsByTagName('section');
+for (var i = 0; i < sections.length; i++) {
+  if (sections[i].getAttribute('secid')) {
+    numberedSections.push(sections[i]);
+  }
+}
+
+var scrollPos = window.scrollY;
+var pending = false;
+window.addEventListener('scroll', function (e) {
+  scrollPos = window.scrollY;
+  if (!pending) {
+    pending = true;
+    window.requestAnimationFrame(function () {
+      updateSectionFocus(scrollPos);
+      pending = false;
+    });
+  }
+});
+
+function updateSectionFocus(pos) {
+  var readLine = pos + document.documentElement.clientHeight / 4;
+
+  var focusedSection;
+  for (var n = numberedSections.length - 1; n >= 0; n--) {
+    if (numberedSections[n].offsetTop < readLine) {
+      focusedSection = numberedSections[n];
+      break;
+    }
+  }
+
+  var secid = focusedSection && focusedSection.getAttribute('secid');
+  if (secid !== currentSection) {
+    currentSection && fold(currentSection, false);
+    secid && fold(secid, true);
+    currentSection = secid;
+  }
+}
+
+function fold(secid, check) {
+  document.getElementById('_sidebar_' + secid).className = check ? 'viewing' : '';
+  var sections = secid.split('.');
+  while (sections.length) {
+    var toggle = document.getElementById('_sidebar_toggle_' + sections.join('.'));
+    if (toggle) {
+      toggle.checked = check;
+    }
+    sections.pop();
+  }
+}
+
+updateSectionFocus(window.scrollY);
+})()</script></div></body></html>
